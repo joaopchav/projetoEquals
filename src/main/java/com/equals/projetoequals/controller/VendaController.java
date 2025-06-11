@@ -2,9 +2,15 @@ package com.equals.projetoequals.controller;
 
 import com.equals.projetoequals.model.Venda;
 import com.equals.projetoequals.repository.VendaRepository;
+import com.equals.projetoequals.service.LeitorArquivoService;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -12,21 +18,38 @@ import java.util.List;
 @RequestMapping("/vendas")
 public class VendaController {
 
-    private final VendaRepository repository;
+    private final VendaRepository repo;
+    private final LeitorArquivoService leitor;
 
-    public VendaController(VendaRepository repository) {
-        this.repository = repository;
+    public VendaController(VendaRepository repo, LeitorArquivoService leitor) {
+        this.repo = repo;
+        this.leitor = leitor;
     }
 
     @GetMapping
-    public List<Venda> listarTodas() {
-        return repository.findAll();
+    public List<Venda> listar() {
+        return repo.findAll();
     }
 
-    @GetMapping("/filtrar")
-    public List<Venda> filtrarPorData(
+    /** Filtros */
+    @GetMapping("/periodo")
+    public List<Venda> porPeriodo(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate inicio,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fim) {
-        return repository.findByDataEventoBetween(inicio, fim);
+        return repo.findByDataEventoBetween(inicio, fim);
+    }
+
+    /** Faz upload e importa um novo arquivo. */
+    @PostMapping("/upload")
+    public ResponseEntity<String> upload(@RequestParam("file") MultipartFile file) throws Exception {
+
+        Path temp = Files.createTempFile("equals", ".txt");
+        Files.write(temp, file.getBytes());
+
+        leitor.importar(temp.toString());
+        Files.delete(temp);
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body("Arquivo processado com sucesso");
     }
 }
