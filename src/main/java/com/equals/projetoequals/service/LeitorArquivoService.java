@@ -30,7 +30,6 @@ public class LeitorArquivoService {
             String linha;
             while ((linha = br.readLine()) != null) {
 
-                // header(0) e trailer(9) são ignorados
                 if (!linha.startsWith("1")) continue;
 
                 Venda v = new Venda();
