@@ -10,5 +10,7 @@ import java.util.List;
 @Repository
 public interface VendaRepository extends JpaRepository<Venda, Long> {
 
+    List<Venda> findByBandeira(String bandeira);
+    List<Venda> findByQtdParcelas(String qtdParcelas);
     List<Venda> findByDataEventoBetween(LocalDate inicio, LocalDate fim);
 }

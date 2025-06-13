@@ -32,11 +32,29 @@ public class VendaController {
     }
 
     /** Filtros */
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Venda> buscarPorId(@PathVariable Long id) {
+        return repo.findById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
     @GetMapping("/periodo")
     public List<Venda> porPeriodo(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate inicio,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fim) {
         return repo.findByDataEventoBetween(inicio, fim);
+    }
+
+    @GetMapping("/bandeira")
+    public List<Venda> buscarPorBandeira(@RequestParam String bandeira) {
+        return repo.findByBandeira(bandeira);
+    }
+
+    @GetMapping("/parcelas")
+    public List<Venda> porParcelas(@RequestParam String quantidade) {
+        return repo.findByQtdParcelas(quantidade);
     }
 
     /** Faz upload e importa um novo arquivo. */
