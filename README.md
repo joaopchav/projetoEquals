@@ -1,6 +1,6 @@
 # Projeto Equals 
 
-# Versão: 0.0.1| Porta Padrão: 8081 | Banco: H2 em memória (jdbc:h2:mem:equalsdb)
+# Porta Padrão: 8081 | Banco: H2 em memória (jdbc:h2:mem:equalsdb)
 
 Esta solução lê o arquivo posicional fornecido pelo meio de pagamento, interpreta
 cada venda, persiste no banco e expõe relatórios via API REST. 
@@ -65,6 +65,6 @@ LeitorArquivoServiceTest — importa o TXT de exemplo.
 
 VendaControllerTest — garante status e JSON da rota /vendas.
 
-
+-------------------------------------------------------------------------------
 
 # João Paulo Chaves |  Desafio Técnico Equals  | Spring Boot + Maven
